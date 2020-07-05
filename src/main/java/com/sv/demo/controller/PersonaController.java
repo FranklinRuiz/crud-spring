@@ -32,16 +32,28 @@ public class PersonaController {
 	private IPersonaService service;
 
 	@GetMapping("/lista")
-	public List<Persona> lista() {
-		return service.listaPersona();
+	public ResponseEntity<List<Persona>> lista() {
+		List<Persona> lista = null;
+		try {
+			lista = service.listaPersona();
+		} catch (Exception e) {
+			return new ResponseEntity<List<Persona>>(lista, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<List<Persona>>(lista, HttpStatus.OK);
 	}
 
 	@GetMapping("/lista/{idPersona}")
-	public Persona listaId(@PathVariable("idPersona") Long idPersona) {
-		return service.persona(idPersona);
+	public ResponseEntity<Persona> listaId(@PathVariable("idPersona") Long idPersona) {
+		Persona p = null;
+		try {
+			p = service.persona(idPersona);
+		} catch (Exception e) {
+			return new ResponseEntity<Persona>(p, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<Persona>(p, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/guardar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping("/guardar")
 	public ResponseEntity<Integer> registrar(@RequestBody Persona Persona) {
 		int rpta = 0;
 		try {
@@ -52,7 +64,7 @@ public class PersonaController {
 		return new ResponseEntity<Integer>(rpta, HttpStatus.OK);
 	}
 
-	@PutMapping(value = "/actualizar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping("/actualizar")
 	public ResponseEntity<Integer> actualizar(@RequestBody Persona Persona) {
 		int rpta = 0;
 		try {
@@ -62,7 +74,7 @@ public class PersonaController {
 		}
 		return new ResponseEntity<Integer>(rpta, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/eliminar/{idPersona}")
 	public ResponseEntity<Integer> eliminar(@PathVariable("idPersona") Long idPersona) {
 		int rpta = 0;
