@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sv.demo.model.Persona;
 import com.sv.demo.service.IPersonaService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
 @RequestMapping("/persona")
 public class PersonaController {
@@ -32,6 +36,8 @@ public class PersonaController {
 	private IPersonaService service;
 
 	@GetMapping("/lista")
+	@ApiOperation("Get lista - lista de todas las personas")
+	@ApiResponse(code = 200, message = "OK")
 	public ResponseEntity<List<Persona>> lista() {
 		List<Persona> lista = null;
 		try {
@@ -43,7 +49,12 @@ public class PersonaController {
 	}
 
 	@GetMapping("/lista/{idPersona}")
-	public ResponseEntity<Persona> listaId(@PathVariable("idPersona") Long idPersona) {
+	@ApiResponses({
+		@ApiResponse(code = 200,message = "OK"),
+		@ApiResponse(code = 404,message = "Persona not found"),
+		
+	})
+	public ResponseEntity<Persona> listaId(@ApiParam(value = "The id of the Persona",required = true,example = "1") @PathVariable("idPersona") Long idPersona) {
 		Persona p = null;
 		try {
 			p = service.persona(idPersona);
