@@ -25,7 +25,7 @@ public class AuthController {
 	private AuthenticationManager authenticationManager;
 
 	@Autowired
-	private UserDetailService platziUserDetailsService;
+	private UserDetailService userDetailService;
 
 	@Autowired
 	private JWTUtil jwtUtil;
@@ -35,7 +35,7 @@ public class AuthController {
 		try {
 			authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-			UserDetails userDetails = platziUserDetailsService.loadUserByUsername(request.getUsername());
+			UserDetails userDetails = userDetailService.loadUserByUsername(request.getUsername());
 			String jwt = jwtUtil.generateToken(userDetails);
 
 			return new ResponseEntity<>(new AuthenticationResponse(jwt), HttpStatus.OK);
